@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="aiMedTitle aiMedDesc">
+  <title id="aiMedTitle">AI Medical Assistant</title>
+  <desc id="aiMedDesc">Gradient chat bubble with medical cross and neural nodes, glowing accents</desc>
+
+  <!-- Themeable colors (override in CSS) -->
+  <style>
+    :root {
+      --ai-primary: #7c4dff;   /* violet */
+      --ai-accent:  #00e5ff;   /* aqua */
+      --ai-rose:    #ff6db6;   /* magenta */
+      --ai-ink:     #0b1020;   /* deep navy for strokes */
+      --ai-bg:      #0a0f1e;   /* backdrop for preview */
+    }
+    /* Optional preview background if you paste into a blank page */
+    svg { background: transparent; }
+  </style>
+
+  <defs>
+    <!-- Soft shadow -->
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Ambient glow for nodes & cross -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.8" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Chat bubble glass gradient -->
+    <linearGradient id="bubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"  stop-color="var(--ai-accent)"/>
+      <stop offset="45%" stop-color="var(--ai-primary)"/>
+      <stop offset="100%" stop-color="var(--ai-rose)"/>
+    </linearGradient>
+
+    <!-- Sheen highlight -->
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#ffffff" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Halo behind bubble -->
+    <radialGradient id="halo" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"  stop-color="var(--ai-accent)" stop-opacity="0.28"/>
+      <stop offset="60%" stop-color="var(--ai-primary)" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Subtle background halo -->
+  <circle cx="32" cy="26" r="22" fill="url(#halo)"/>
+
+  <!-- Chat bubble body -->
+  <g filter="url(#softShadow)">
+    <!-- Bubble -->
+    <path d="M16 14h32a8 8 0 0 1 8 8v10a8 8 0 0 1-8 8H30l-8.8 7.2c-1.3 1.1-3.2-.2-2.7-1.8L20 40h-4a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8z"
+          fill="url(#bubbleGrad)"/>
+    <!-- Glass sheen -->
+    <path d="M18 16h28c5 0 9 4 9 9v2c-16 5-31 6-47 2v-4c0-5 4-9 9-9z"
+          fill="url(#sheen)" opacity="0.35"/>
+  </g>
+
+  <!-- Medical cross (glowing) -->
+  <g filter="url(#glow)">
+    <rect x="28.5" y="20.5" width="7" height="17" rx="1.5" fill="#fff"/>
+    <rect x="23.5" y="25.5" width="17" height="7" rx="1.5" fill="#fff"/>
+    <!-- Cross tint overlay -->
+    <rect x="28.5" y="20.5" width="7" height="17" rx="1.5" fill="var(--ai-accent)" opacity="0.25"/>
+    <rect x="23.5" y="25.5" width="17" height="7" rx="1.5" fill="var(--ai-accent)" opacity="0.25"/>
+  </g>
+
+  <!-- Neural nodes + connectors -->
+  <g stroke="var(--ai-ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <!-- Right cluster -->
+    <path d="M42 25.5h4.2"/>
+    <path d="M40.4 23.2l4.6-2.6"/>
+    <path d="M40.4 27.8l4.6 2.6"/>
+    <circle cx="48.3" cy="19.6" r="2.1" fill="var(--ai-accent)" filter="url(#glow)"/>
+    <circle cx="51.4" cy="25.5" r="2.1" fill="var(--ai-primary)" filter="url(#glow)"/>
+    <circle cx="48.3" cy="31.4" r="2.1" fill="var(--ai-rose)"   filter="url(#glow)"/>
+
+    <!-- Left micro cluster -->
+    <path d="M16.8 26.5h3"/>
+    <circle cx="14.2" cy="26.5" r="1.6" fill="var(--ai-accent)" filter="url(#glow)"/>
+    <circle cx="22.2" cy="26.5" r="1.6" fill="var(--ai-primary)" filter="url(#glow)"/>
+  </g>
+
+  <!-- Ambient breathing glow (gentle) - Animation removed to prevent screen jerking -->
+  <g opacity="0.55">
+    <circle cx="32" cy="29" r="14" fill="var(--ai-accent)" opacity="0.2"/>
+  </g>
+
+  <!-- Fine outline for definition -->
+  <path d="M16 14h32a8 8 0 0 1 8 8v10a8 8 0 0 1-8 8H30l-8.8 7.2c-1.3 1.1-3.2-.2-2.7-1.8L20 40h-4a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8z"
+        fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+</svg>

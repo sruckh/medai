@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAI - Intelligent-Internet / II-Medical-8B</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.0.0/dist/flowbite.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="/static/medai_theme.css">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <style>
+        body {
+            font-family: var(--font-sans);
+            background: linear-gradient(to bottom right, oklch(0.98 0.01 210), oklch(0.95 0.01 215));
+            color: var(--foreground);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Enhanced Header Styles */
+        .header-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg,
+                oklch(0.6 0.15 230) 0%,
+                oklch(0.7 0.1 170) 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .avatar-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .avatar-glow:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.7);
+        }
+
+        /* Animation Styles */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        /* .floating animation removed to prevent screen jerking */
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg,
+                rgba(255,255,255,0.1) 25%,
+                rgba(255,255,255,0.2) 50%,
+                rgba(255,255,255,0.1) 75%
+            );
+            background-size: 200% 100%;
+            /* Animation removed to prevent screen jerking */
+        }
+
+        /* Enhanced Chat Bubble */
+        .chat-bubble {
+            position: relative;
+            padding: 1rem;
+            border-radius: 1.5rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .chat-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 1rem;
+            width: 0;
+            height: 0;
+            border: 0.5rem solid transparent;
+            border-top-color: var(--background);
+        }
+
+        .chat-bubble.user {
+            background: linear-gradient(135deg,
+                oklch(0.6 0.15 230),
+                oklch(0.5 0.2 240)
+            );
+            color: white;
+        }
+
+        .chat-bubble.assistant {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Enhanced Card Styles */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
+        }
+
+        /* Clinical Block Enhancements */
+        .clinical-block {
+            border-left: 4px solid var(--accent);
+            padding-left: 1.25rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clinical-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(
+                to bottom,
+                oklch(0.85 0.08 30),
+                oklch(0.6 0.15 230)
+            );
+            /* Animation removed to prevent screen jerking */
+        }
+
+        /* Enhanced Button Styles */
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glow-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .glow-button:active::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(0.1, 0.1);
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(2, 2);
+                opacity: 0;
+            }
+        }
+
+        /* Medical Icons Animation */
+        .medical-icon {
+            transition: all 0.3s ease;
+        }
+
+        .medical-icon:hover {
+            transform: rotate(15deg) scale(1.1);
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.3));
+        }
+
+        /* Enhanced Safety Banner */
+        .safety-banner {
+            background: linear-gradient(90deg,
+                oklch(0.65 0.2 15),
+                oklch(0.55 0.2 350)
+            );
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            /* Animation removed to prevent screen jerking */
+        }
+
+        /* Chat-specific styles */
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .assistant-message {
+            background-color: var(--muted);
+            color: var(--foreground);
+            align-self: flex-start;
+        }
+
+        #loading-indicator {
+            text-align: center;
+            padding: 10px;
+            color: var(--muted-foreground);
+        }
+
+        #error-message {
+            color: var(--destructive);
+            text-align: center;
+            padding: 10px;
+        }
+
+        .token-stream {
+            display: inline-block;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); }
+            100% { box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header with Medical Theme -->
+        <header class="header-glass p-6 border-b border-border">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between relative">
+                <!-- Left Side - Avatar and Greeting -->
+                <div class="flex items-center space-x-6 mb-4 md:mb-0">
+                    <!-- Dr. Razowski's Avatar with Glow -->
+                    <div class="w-20 h-20 rounded-full overflow-hidden avatar-glow">
+                        <img src="/static/Dorota-256.jpg" alt="Dr. Razowski" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Greeting with Gradient Text -->
+                    <div>
+                        <h1 class="text-2xl font-bold header-gradient">Hello Dr. Razowski</h1>
+                        <p class="text-lg text-muted-foreground">I am your AI Medical Assistant</p>
+                        <div class="mt-2 flex items-center space-x-2">
+                            <span class="text-sm font-medium">MedAI — Intelligent-Internet / II-Medical-8B</span>
+                            <i data-lucide="stethoscope" class="w-5 h-5 text-primary medical-icon"></i>
+                            <i data-lucide="dna" class="w-5 h-5 text-accent medical-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Actions -->
+                <div class="flex items-center space-x-3">
+                    <button class="px-4 py-2 rounded-full text-sm bg-primary text-primary-foreground hover:bg-primary/90 glow-button">
+                        <i data-lucide="plus-circle" class="w-4 h-4 inline mr-1"></i> New Case
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-muted glow-button">
+                        <i data-lucide="upload"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-muted glow-button">
+                        <i data-lucide="shield"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-muted glow-button">
+                        <i data-lucide="settings"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-muted glow-button">
+                        <i data-lucide="moon"></i>
+                    </button>
+                </div>
+
+                <!-- Decorative Medical Pattern -->
+                <div class="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+                    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 20L130 60L100 100L70 60L100 20Z" fill="currentColor" class="text-primary"/>
+                        <path d="M100 120L130 160L100 200L70 160L100 120Z" fill="currentColor" class="text-primary"/>
+                        <path d="M40 100L70 140L100 100L70 60L40 100Z" fill="currentColor" class="text-accent"/>
+                        <path d="M160 100L130 140L100 100L130 60L160 100Z" fill="currentColor" class="text-accent"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex flex-1 overflow-hidden max-w-6xl mx-auto w-full">
+            <!-- Left Rail -->
+            <aside class="w-64 border-r border-border p-4 hidden md:block">
+                <div class="mb-6">
+                    <h2 class="text-sm font-semibold mb-3 text-primary flex items-center">
+                        <i data-lucide="activity" class="w-4 h-4 mr-1"></i> RECENT SESSIONS
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-lg hover:bg-muted/50 text-sm glass-card">
+                            <div class="font-medium">Chest Pain Evaluation</div>
+                            <div class="text-xs text-muted-foreground flex items-center mt-1">
+                                <i data-lucide="heart-pulse" class="w-3 h-3 mr-1"></i> HR 110 | BP 130/85
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-lg hover:bg-muted/50 text-sm glass-card">
+                            <div class="font-medium">Abdominal Pain</div>
+                            <div class="text-xs text-muted-foreground flex items-center mt-1">
+                                <i data-lucide="thermometer" class="w-3 h-3 mr-1"></i> Temp 38.2°C
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-full py-3 text-sm border border-dashed rounded hover:bg-muted/50 flex items-center justify-center glass-card">
+                    <i data-lucide="plus" class="w-4 h-4 mr-1"></i> New Session
+                </button>
+            </aside>
+
+            <!-- Chat Area -->
+            <main class="flex-1 p-4 overflow-auto">
+                <!-- Chat Thread -->
+                <div class="max-w-3xl mx-auto w-full" id="chat-thread" style="min-height: 600px;">
+                    <!-- MedAI Message -->
+                    <div class="flex items-start gap-3 mb-6 chat-bubble assistant">
+                        <div class="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            <img src="/static/ai-med-icon.svg" alt="AI Medical Assistant" class="w-16 h-16 object-contain">
+                        </div>
+                        <div class="flex-1">
+                            <div class="glass-card rounded-xl p-4 mb-2">
+                                <p class="text-lg">Welcome to MedAI. I'm ready to help with your medical triage and diagnostic exploration needs.</p>
+                                <div class="mt-3 flex items-center justify-between">
+                                    <span class="text-xs text-muted-foreground">• Just now</span>
+                                    <div class="flex space-x-1">
+                                        <button class="p-1 hover:bg-muted rounded-full">
+                                            <i data-lucide="copy" class="w-3 h-3"></i>
+                                        </button>
+                                        <button class="p-1 hover:bg-muted rounded-full">
+                                            <i data-lucide="share-2" class="w-3 h-3"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Composer -->
+        <footer class="glass-card border-t border-border p-4">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <div class="absolute -top-6 left-0 text-xs text-muted-foreground">
+                        <i data-lucide="command" class="w-3 h-3 inline mr-1"></i> /triage mode
+                    </div>
+                    <textarea
+                        id="user-input"
+                        class="w-full min-h-[44px] rounded-xl p-3 pr-20 focus:outline-none focus:ring-2 focus:ring-ring bg-background border border-border"
+                        placeholder="Type your message...">
+                    </textarea>
+                    <div class="absolute right-3 bottom-3 flex gap-1">
+                        <button class="p-1 hover:bg-muted rounded-full">
+                            <i data-lucide="paperclip" class="w-4 h-4"></i>
+                        </button>
+                        <button class="p-1 hover:bg-muted rounded-full">
+                            <i data-lucide="image" class="w-4 h-4"></i>
+                        </button>
+                        <button class="p-1 hover:bg-muted rounded-full">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="send-btn" class="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 glow-button">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="loading-indicator" style="display: none;" class="text-center py-4">
+                <div class="flex flex-col items-center justify-center gap-4">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 64 64"
+                        width="80"
+                        height="80"
+                        class="relative"
+                    >
+                        <style>
+                            .pulse-ring {
+                                fill: none;
+                                stroke: oklch(0.6 0.15 230);
+                                stroke-width: 3;
+                                opacity: 0.6;
+                                transform-origin: 32px 32px;
+                                animation: pulse 2.5s infinite;
+                            }
+                            .pulse-ring:nth-child(2) { animation-delay: 0.8s; }
+                            .pulse-ring:nth-child(3) { animation-delay: 1.6s; }
+
+                            @keyframes pulse {
+                                0%   { r: 10; opacity: 0.6; stroke-width: 3; }
+                                70%  { r: 26; opacity: 0; stroke-width: 1; }
+                                100% { r: 10; opacity: 0; stroke-width: 3; }
+                            }
+                        </style>
+
+                        <!-- Pulsing rings -->
+                        <circle class="pulse-ring" cx="32" cy="32" r="10" />
+                        <circle class="pulse-ring" cx="32" cy="32" r="10" />
+                        <circle class="pulse-ring" cx="32" cy="32" r="10" />
+
+                        <!-- Glowing cross -->
+                        <g>
+                            <rect x="28.5" y="18.5" width="7" height="27" rx="1.5" fill="#fff" />
+                            <rect x="18.5" y="28.5" width="27" height="7" rx="1.5" fill="#fff" />
+                            <rect x="28.5" y="18.5" width="7" height="27" rx="1.5" fill="oklch(0.6 0.15 230)" opacity="0.3" />
+                            <rect x="18.5" y="28.5" width="27" height="7" rx="1.5" fill="oklch(0.6 0.15 230)" opacity="0.3" />
+                        </g>
+                    </svg>
+
+                    <p class="text-center text-base font-medium" style="color: oklch(0.6 0.15 230);">
+                        Analyzing medical data... Please wait
+                    </p>
+                </div>
+            </div>
+            <div id="error-message" style="display: none;" class="text-center py-2"></div>
+        </footer>
+
+        <!-- Safety Banner -->
+        <div class="safety-banner">
+            <i data-lucide="alert-circle" class="w-4 h-4 inline mr-1"></i>
+            Educational assistance only. Not a substitute for professional judgment. Not for emergencies.
+        </div>
+    </div>
+
+    <script>
+        // Initialize icons
+        lucide.createIcons();
+
+        // Chat functionality
+        const chatThread = document.getElementById('chat-thread');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const errorMessage = document.getElementById('error-message');
+
+        let messages = [];
+
+        const addMessage = (role, content) => {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('flex', 'items-start', 'gap-3', 'mb-6');
+
+            if (role === 'user') {
+                messageContainer.classList.add('chat-bubble', 'user', 'pulse');
+                messageContainer.innerHTML = `
+                    <div class="flex-1 max-w-2xl">
+                        <div class="glass-card rounded-xl p-4 mb-2 bg-primary text-primary-foreground">
+                            <p class="text-lg">${content}</p>
+                            <div class="mt-3 flex items-center justify-between">
+                                <span class="text-xs">• ${new Date().toLocaleTimeString()}</span>
+                                <div class="flex space-x-1">
+                                    <button class="p-1 hover:bg-muted rounded-full">
+                                        <i data-lucide="copy" class="w-3 h-3"></i>
+                                    </button>
+                                    <button class="p-1 hover:bg-muted rounded-full">
+                                        <i data-lucide="share-2" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </div>
+                `;
+            } else {
+                messageContainer.classList.add('chat-bubble', 'assistant');
+                messageContainer.innerHTML = `
+                    <div class="w-20 h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <img src="/static/ai-med-icon.svg" alt="AI Medical Assistant" class="w-16 h-16 object-contain">
+                    </div>
+                    <div class="flex-1">
+                        <div class="glass-card rounded-xl p-4 mb-2">
+                            <p class="text-lg">${content}</p>
+                            <div class="mt-3 flex items-center justify-between">
+                                <span class="text-xs text-muted-foreground">• ${new Date().toLocaleTimeString()}</span>
+                                <div class="flex space-x-1">
+                                    <button class="p-1 hover:bg-muted rounded-full">
+                                        <i data-lucide="copy" class="w-3 h-3"></i>
+                                    </button>
+                                    <button class="p-1 hover:bg-muted rounded-full">
+                                        <i data-lucide="share-2" class="w-3 h-3"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            chatThread.appendChild(messageContainer);
+            chatThread.scrollTop = chatThread.scrollHeight;
+            return messageContainer;
+        };
+
+        const sendMessage = async () => {
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            addMessage('user', userMessage);
+            messages.push({ role: 'user', content: userMessage });
+            userInput.value = '';
+            sendBtn.disabled = true;
+            loadingIndicator.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        messages: messages,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('Received data:', data);
+                let rawMessage = data.output[0].choices[0].tokens.join('');
+                console.log('Raw assistant message:', rawMessage);
+
+                // Extract content between <Answer> tags or after <think> tags
+                let assistantMessage = rawMessage;
+
+                // First, try to extract content between <Answer> tags
+                const answerMatch = rawMessage.match(/<Answer>([\s\S]*?)<\/Answer>/i);
+                if (answerMatch) {
+                    assistantMessage = answerMatch[1].trim();
+                } else {
+                    // If no <Answer> tags, remove <think> content
+                    assistantMessage = rawMessage.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                }
+
+                // Convert markdown to HTML
+                assistantMessage = assistantMessage
+                    // Headers
+                    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>')
+                    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>')
+                    .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>')
+                    // Bold
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    // Italic
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    // Lists
+                    .replace(/^\* (.*$)/gim, '<li class="ml-4">• $1</li>')
+                    .replace(/^\d+\. (.*$)/gim, '<li class="ml-4">$1</li>')
+                    // Code blocks
+                    .replace(/```([\s\S]*?)```/g, '<pre class="bg-muted p-3 rounded mt-2 mb-2 overflow-x-auto"><code>$1</code></pre>')
+                    .replace(/`([^`]+)`/g, '<code class="bg-muted px-1 py-0.5 rounded text-sm">$1</code>')
+                    // Line breaks
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>');
+
+                // Wrap in paragraph if not already wrapped
+                if (!assistantMessage.includes('<p>') && !assistantMessage.includes('<h')) {
+                    assistantMessage = '<p>' + assistantMessage + '</p>';
+                }
+
+                console.log('Processed assistant message:', assistantMessage);
+
+                // Remove pulse animation from user messages when AI responds
+                const userMessages = document.querySelectorAll('.chat-bubble.user');
+                userMessages.forEach(msg => msg.classList.remove('pulse'));
+
+                addMessage('assistant', assistantMessage);
+                messages.push({ role: 'assistant', content: assistantMessage });
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                errorMessage.innerText = error.message;
+                errorMessage.style.display = 'block';
+            } finally {
+                sendBtn.disabled = false;
+                loadingIndicator.style.display = 'none';
+            }
+        };
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
